@@ -1,6 +1,6 @@
 package edu.info.ip.main;
 
-import edu.info.ip.util.ImageUtil;
+import static edu.info.ip.util.ImageUtil.*;
 
 import java.awt.image.BufferedImage;
 
@@ -9,9 +9,11 @@ public class MainTest {
     public static void main(String[] args) {
 
         String inputFileName = "./test_images/lena_color_512.bmp";
-        BufferedImage inputImg = ImageUtil.loadImage(inputFileName);
+//        BufferedImage inputImg = ImageUtil.loadImage(inputFileName);
+        BufferedImage inputImg = loadImage(inputFileName);
 
-        ImageUtil.displayImage(inputImg,"Original image");
+//        ImageUtil.displayImage(inputImg,"Original image");
+        displayImage(inputImg,"Original image");
 
 //        ImageUtil.saveImage(inputImg,"out_image.jpg","jpg");
 
@@ -48,6 +50,13 @@ public class MainTest {
 
         // to gray
 
-        ImageUtil.displayImage(ImageUtil.toGray(inputImg),"To Gray Simple");
+//        ImageUtil.displayImage(ImageUtil.toGray(inputImg),"To Gray Simple");
+
+        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_AVG),"GRAY_TRANSFORMS_AVG");
+        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_GREEN),"GRAY_TRANSFORMS_GREEN");
+        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_PAL),"GRAY_TRANSFORMS_PAL");
+        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_SQRT),"GRAY_TRANSFORMS_SQRT");
+        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_USUAL),"GRAY_TRANSFORMS_USUAL");
+
     }
 }
