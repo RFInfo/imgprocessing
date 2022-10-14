@@ -190,4 +190,18 @@ public class ImageUtil {
 
         return outImg;
     }
+
+    public static BufferedImage toGray(BufferedImage input){
+        BufferedImage output = null;
+        output = new
+                BufferedImage(input.getWidth(),input.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+        for(int y=0; y<input.getHeight(); y++)
+            for(int x=0; x<input.getWidth(); x++){
+                int r = input.getRaster().getSample(x, y, 0);
+                int g = input.getRaster().getSample(x, y, 1);
+                int b = input.getRaster().getSample(x, y, 2);
+                output.getRaster().setSample(x, y, 0, (r+g+b)/3);
+            }
+        return output;
+    }
 }

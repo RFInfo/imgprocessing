@@ -42,8 +42,12 @@ public class MainTest {
 //        ImageUtil.displayImage(bImg,"Pixelate - B");
 
         // flip
-        ImageUtil.displayImage(ImageUtil.flipV(inputImg),"FlipV");
-        ImageUtil.displayImage(ImageUtil.flipH(inputImg),"FlipH");
-        ImageUtil.displayImage(ImageUtil.flipV(ImageUtil.flipH(inputImg)),"FlipHV");
+//        ImageUtil.displayImage(ImageUtil.flipV(inputImg),"FlipV");
+//        ImageUtil.displayImage(ImageUtil.flipH(inputImg),"FlipH");
+//        ImageUtil.displayImage(ImageUtil.flipV(ImageUtil.flipH(inputImg)),"FlipHV");
+
+        // to gray
+
+        ImageUtil.displayImage(ImageUtil.toGray(inputImg),"To Gray Simple");
     }
 }
