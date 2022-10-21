@@ -52,11 +52,28 @@ public class MainTest {
 
 //        ImageUtil.displayImage(ImageUtil.toGray(inputImg),"To Gray Simple");
 
-        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_AVG),"GRAY_TRANSFORMS_AVG");
-        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_GREEN),"GRAY_TRANSFORMS_GREEN");
-        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_PAL),"GRAY_TRANSFORMS_PAL");
-        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_SQRT),"GRAY_TRANSFORMS_SQRT");
-        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_USUAL),"GRAY_TRANSFORMS_USUAL");
+//        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_AVG),"GRAY_TRANSFORMS_AVG");
+//        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_GREEN),"GRAY_TRANSFORMS_GREEN");
+//        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_PAL),"GRAY_TRANSFORMS_PAL");
+//        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_SQRT),"GRAY_TRANSFORMS_SQRT");
+//        displayImage(colorToGray(inputImg, GrayTransforms.GRAY_TRANSFORMS_USUAL),"GRAY_TRANSFORMS_USUAL");
 
+        // brightness
+
+//        displayImage(brightnessV1(inputImg, 50), "Brightness +50");
+//        displayImage(brightnessV2(inputImg, 50), "Brightness +50");
+//        displayImage(brightnessV3(inputImg, 50), "Brightness +50");
+
+//        brightnessRGB
+//        displayImage(brightnessRGB(inputImg, -50, 20, -40), "Brightness RGB");
+
+        // contrast
+//        displayImage(contrast(inputImg, 1.2f), "Contrast");
+
+        BufferedImage brightnessImg = brightnessRGB(inputImg, -50, 20, -40);
+        displayImage(brightnessImg, "Brightness");
+
+        BufferedImage contrastImg = contrast(brightnessImg, 1.2f);
+        displayImage(contrastImg, "Contrast");
     }
 }
