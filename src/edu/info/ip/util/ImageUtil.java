@@ -366,4 +366,38 @@ public class ImageUtil {
 
         return outImg;
     }
+
+    public static BufferedImage threshold(BufferedImage inImg, int threshold){
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+
+        short[] thresholdLUT = new short[256];
+
+        for (int i = 0; i < 256; i++) {
+            thresholdLUT[i] = (short) ((i < threshold) ? 0 : 255) ;
+            System.out.println(i + " " + thresholdLUT[i]);
+        }
+
+        ShortLookupTable shortLookupTable = new ShortLookupTable(0, thresholdLUT);
+        LookupOp lookupOp = new LookupOp(shortLookupTable, null);
+        lookupOp.filter(inImg,outImg);
+
+        return outImg;
+    }
+
+    public static BufferedImage negative(BufferedImage inImg){
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+
+        short[] negative = new short[256];
+
+        for (int i = 0; i < 256; i++) {
+            negative[i] = (short) (255-i) ;
+            System.out.println(i + " " + negative[i]);
+        }
+
+        ShortLookupTable shortLookupTable = new ShortLookupTable(0, negative);
+        LookupOp lookupOp = new LookupOp(shortLookupTable, null);
+        lookupOp.filter(inImg,outImg);
+
+        return outImg;
+    }
 }

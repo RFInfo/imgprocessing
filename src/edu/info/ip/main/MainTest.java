@@ -1,9 +1,6 @@
 package edu.info.ip.main;
 
-import edu.info.ip.util.AbstractSettingsDialog;
-import edu.info.ip.util.BrightnessDlg;
-import edu.info.ip.util.BrightnessRGBDlg;
-import edu.info.ip.util.GammaDlg;
+import edu.info.ip.util.*;
 
 import static edu.info.ip.util.ImageUtil.*;
 
@@ -13,7 +10,8 @@ public class MainTest {
 
     public static void main(String[] args) {
 
-        String inputFileName = "./test_images/lena_color_512.bmp";
+//        String inputFileName = "./test_images/lena_color_512.bmp";
+        String inputFileName = "./test_images/eight.bmp";
 //        BufferedImage inputImg = ImageUtil.loadImage(inputFileName);
         BufferedImage inputImg = loadImage(inputFileName);
 
@@ -100,5 +98,15 @@ public class MainTest {
 //        BufferedImage testImg1 = applySettingsDlg(inputImg, new BrightnessDlg());
 //        BufferedImage testImg2 = applySettingsDlg(testImg1, new BrightnessDlg());
 //        displayImage(testImg2,"Brightness");
+
+        // threshold
+        BufferedImage testImgGray = colorToGray(inputImg,GrayTransforms.GRAY_TRANSFORMS_PAL);
+        displayImage(testImgGray, "Gray");
+//        BufferedImage testImgThreshold = threshold(testImgGray,128);
+        BufferedImage testImgThreshold = applySettingsDlg(testImgGray, new ThresholdDlg());
+        displayImage(testImgThreshold, "Binary");
+
+        displayImage(negative(testImgThreshold), "Binary Negative");
+
     }
 }
