@@ -47,6 +47,27 @@ public class ImageUtil {
         frame.setVisible(true);
     }
 
+    public static void displayImage(BufferedImage img) {
+        displayImage(img, "");
+    }
+    public static BufferedImage applySettingsDlg(BufferedImage img,
+                                                 AbstractSettingsDialog dialog) {
+        if (img == null)
+            return null;
+        JFrame frame = new JFrame();
+        ImagePanel imagePanel = new ImagePanel();
+        imagePanel.setFitToScreen(false);
+        imagePanel.setImage(img);
+        frame.setContentPane(new JScrollPane(imagePanel));
+        frame.pack();
+        frame.setVisible(true);
+        dialog.setImagePanel(imagePanel);
+        dialog.pack();
+        dialog.setVisible(true);
+        frame.dispose();
+        return imagePanel.getImage();
+    }
+
     public static BufferedImage generateRandomPixels(int width, int height) {
         BufferedImage outImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 

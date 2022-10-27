@@ -1,5 +1,8 @@
 package edu.info.ip.main;
 
+import edu.info.ip.util.AbstractSettingsDialog;
+import edu.info.ip.util.BrightnessDlg;
+
 import static edu.info.ip.util.ImageUtil.*;
 
 import java.awt.image.BufferedImage;
@@ -75,5 +78,8 @@ public class MainTest {
 
         BufferedImage contrastImg = contrast(brightnessImg, 1.2f);
         displayImage(contrastImg, "Contrast");
+
+        BufferedImage testImg = applySettingsDlg(inputImg, new BrightnessDlg());
+        displayImage(testImg);
     }
 }
