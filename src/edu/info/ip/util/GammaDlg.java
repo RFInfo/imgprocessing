@@ -52,7 +52,7 @@ public class GammaDlg extends AbstractSettingsDialog{
         double val = (double)slider1.getValue()/100.0;
         textField1.setText(""+val);
 
-//        BufferedImage img = ImageUtil.contrastGamma(originalImg, val);
-//        imagePanel.setImage(img);
+        BufferedImage img = ImageUtil.contrastGamma(originalImg, val);
+        imagePanel.setImage(img);
     }
 }

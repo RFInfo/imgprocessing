@@ -2,6 +2,8 @@ package edu.info.ip.main;
 
 import edu.info.ip.util.AbstractSettingsDialog;
 import edu.info.ip.util.BrightnessDlg;
+import edu.info.ip.util.BrightnessRGBDlg;
+import edu.info.ip.util.GammaDlg;
 
 import static edu.info.ip.util.ImageUtil.*;
 
@@ -33,7 +35,7 @@ public class MainTest {
 //        ImageUtil.displayImage(ImageUtil.extractBand2(inputImg, 2), "Blue");
 
         // generare de nivele de gri
-//        ImageUtil.displayImage(ImageUtil.grayLevelGenerator(0,50,5,400),"Gray levels");
+//        displayImage(grayLevelGenerator(0,50,1,400),"Gray levels");
 
         // pixelate
 //        BufferedImage pixelImg = ImageUtil.pixelate(inputImg,64);
@@ -73,13 +75,30 @@ public class MainTest {
         // contrast
 //        displayImage(contrast(inputImg, 1.2f), "Contrast");
 
-        BufferedImage brightnessImg = brightnessRGB(inputImg, -50, 20, -40);
-        displayImage(brightnessImg, "Brightness");
+// brightnessRGB + contrast
+//        BufferedImage brightnessImg = brightnessRGB(inputImg, -50, 20, -40);
+//        displayImage(brightnessImg, "Brightness");
+//
+//        BufferedImage contrastImg = contrast(brightnessImg, 1.2f);
+//        displayImage(contrastImg, "Contrast");
 
-        BufferedImage contrastImg = contrast(brightnessImg, 1.2f);
-        displayImage(contrastImg, "Contrast");
+//        BufferedImage testImg = applySettingsDlg(inputImg, new BrightnessDlg());
+//        displayImage(testImg);
 
-        BufferedImage testImg = applySettingsDlg(inputImg, new BrightnessDlg());
-        displayImage(testImg);
+//        BufferedImage testImg = applySettingsDlg(inputImg, new BrightnessRGBDlg());
+//        displayImage(testImg,"Brightness RGB");
+
+//        BufferedImage testImg = contrastGamma(inputImg, 0.9d);
+//        displayImage(contrastGamma(testImg, 1.5d), "Gamma 1.5");
+
+
+        // inversare efect
+//        BufferedImage testImg1 = applySettingsDlg(inputImg, new GammaDlg());
+//        BufferedImage testImg2 = applySettingsDlg(testImg1, new GammaDlg());
+//        displayImage(testImg2,"Gamma");
+
+//        BufferedImage testImg1 = applySettingsDlg(inputImg, new BrightnessDlg());
+//        BufferedImage testImg2 = applySettingsDlg(testImg1, new BrightnessDlg());
+//        displayImage(testImg2,"Brightness");
     }
 }
