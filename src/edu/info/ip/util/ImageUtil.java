@@ -2,9 +2,7 @@ package edu.info.ip.util;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.LookupOp;
-import java.awt.image.ShortLookupTable;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -50,6 +48,7 @@ public class ImageUtil {
     public static void displayImage(BufferedImage img) {
         displayImage(img, "");
     }
+
     public static BufferedImage applySettingsDlg(BufferedImage img,
                                                  AbstractSettingsDialog dialog) {
         if (img == null)
@@ -130,17 +129,17 @@ public class ImageUtil {
         return outImg;
     }
 
-    public static BufferedImage grayLevelGenerator(int firstGrayLevel, int blockSize, int grayLevelStep, int imgHeight){
+    public static BufferedImage grayLevelGenerator(int firstGrayLevel, int blockSize, int grayLevelStep, int imgHeight) {
 
-        int imgWidth = ((256 - firstGrayLevel)/grayLevelStep) * blockSize;
+        int imgWidth = ((256 - firstGrayLevel) / grayLevelStep) * blockSize;
 
-        BufferedImage outImg = new BufferedImage(imgWidth,imgHeight,BufferedImage.TYPE_BYTE_GRAY);
+        BufferedImage outImg = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_BYTE_GRAY);
 
         for (int y = 0; y < outImg.getHeight(); y++) {
             int grayLevel = firstGrayLevel;
-            for (int x = 0; x < outImg.getWidth(); x+=blockSize){
+            for (int x = 0; x < outImg.getWidth(); x += blockSize) {
                 for (int xi = 0; xi < blockSize; xi++) {
-                    outImg.getRaster().setSample(x+xi, y, 0, grayLevel);
+                    outImg.getRaster().setSample(x + xi, y, 0, grayLevel);
                 }
                 grayLevel += grayLevelStep;
             }
@@ -148,150 +147,153 @@ public class ImageUtil {
         return outImg;
     }
 
-    public static BufferedImage pixelate(BufferedImage inImg, int blockSize){
+    public static BufferedImage pixelate(BufferedImage inImg, int blockSize) {
         BufferedImage outImg = null;
 
-        if(inImg.getWidth() % blockSize != 0 && inImg.getHeight() % blockSize != 0){
+        if (inImg.getWidth() % blockSize != 0 && inImg.getHeight() % blockSize != 0) {
             System.out.println("wrong image size");
             return outImg;
         }
 
-        outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(),inImg.getType());
+        outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         for (int band = 0; band < inImg.getRaster().getNumBands(); band++)
-        for (int y = 0; y < outImg.getHeight(); y+=blockSize) {
-            for (int x = 0; x < outImg.getWidth(); x+=blockSize) {
+            for (int y = 0; y < outImg.getHeight(); y += blockSize) {
+                for (int x = 0; x < outImg.getWidth(); x += blockSize) {
 
-                // parcurgem blocul
-                int grayLevelSum = 0;
-                for (int yi = 0; yi < blockSize; yi++)
-                    for (int xi = 0; xi < blockSize; xi++)
-                        grayLevelSum += inImg.getRaster().getSample(x+xi,y+yi, band);
+                    // parcurgem blocul
+                    int grayLevelSum = 0;
+                    for (int yi = 0; yi < blockSize; yi++)
+                        for (int xi = 0; xi < blockSize; xi++)
+                            grayLevelSum += inImg.getRaster().getSample(x + xi, y + yi, band);
 
-                int avgGrayLevel = grayLevelSum / (blockSize * blockSize);
+                    int avgGrayLevel = grayLevelSum / (blockSize * blockSize);
 
-                for (int yi = 0; yi < blockSize; yi++)
-                    for (int xi = 0; xi < blockSize; xi++)
-                        outImg.getRaster().setSample(x+xi, y+yi, band, avgGrayLevel);
+                    for (int yi = 0; yi < blockSize; yi++)
+                        for (int xi = 0; xi < blockSize; xi++)
+                            outImg.getRaster().setSample(x + xi, y + yi, band, avgGrayLevel);
+                }
             }
-        }
 
         return outImg;
     }
 
-    public static BufferedImage flipV(BufferedImage inImg){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getWidth(),inImg.getType());
+    public static BufferedImage flipV(BufferedImage inImg) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getWidth(), inImg.getType());
 
-        for (int y = 0; y < outImg.getHeight()/2; y++)
+        for (int y = 0; y < outImg.getHeight() / 2; y++)
             for (int x = 0; x < outImg.getWidth(); x++) {
 //                int pixel = inImg.getRGB(x,y);
-                outImg.setRGB(x,y,inImg.getRGB(x,(inImg.getHeight()-1)-y));
-                outImg.setRGB(x,(inImg.getHeight()-1)-y,inImg.getRGB(x,y));
+                outImg.setRGB(x, y, inImg.getRGB(x, (inImg.getHeight() - 1) - y));
+                outImg.setRGB(x, (inImg.getHeight() - 1) - y, inImg.getRGB(x, y));
             }
 
         return outImg;
     }
 
-    public static BufferedImage flipH(BufferedImage inImg){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getWidth(),inImg.getType());
+    public static BufferedImage flipH(BufferedImage inImg) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getWidth(), inImg.getType());
 
         for (int y = 0; y < outImg.getHeight(); y++)
-            for (int x = 0; x < outImg.getWidth()/2; x++) {
+            for (int x = 0; x < outImg.getWidth() / 2; x++) {
 //                int pixel = inImg.getRGB(x,y);
-                outImg.setRGB(x,y,inImg.getRGB((inImg.getWidth()-1)-x,y));
-                outImg.setRGB((inImg.getWidth()-1)-x,y,inImg.getRGB(x,y));
+                outImg.setRGB(x, y, inImg.getRGB((inImg.getWidth() - 1) - x, y));
+                outImg.setRGB((inImg.getWidth() - 1) - x, y, inImg.getRGB(x, y));
             }
 
         return outImg;
     }
 
-    public static BufferedImage toGray(BufferedImage input){
+    public static BufferedImage toGray(BufferedImage input) {
         BufferedImage output;
-        output = new BufferedImage(input.getWidth(),input.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+        output = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
 
-        for(int y=0; y<input.getHeight(); y++)
-            for(int x=0; x<input.getWidth(); x++){
+        for (int y = 0; y < input.getHeight(); y++)
+            for (int x = 0; x < input.getWidth(); x++) {
                 int r = input.getRaster().getSample(x, y, 0);
                 int g = input.getRaster().getSample(x, y, 1);
                 int b = input.getRaster().getSample(x, y, 2);
-                output.getRaster().setSample(x, y, 0, (r+g+b)/3);
+                output.getRaster().setSample(x, y, 0, (r + g + b) / 3);
             }
         return output;
     }
 
-    public enum GrayTransforms {GRAY_TRANSFORMS_GREEN, GRAY_TRANSFORMS_SQRT,
-        GRAY_TRANSFORMS_AVG, GRAY_TRANSFORMS_USUAL, GRAY_TRANSFORMS_PAL}
-
-    public static int constrain(int val, int min, int max){
-        return val>max ? max : (val<min ? min : val);
-    }
-    public static int constrain(int val){
-        return constrain(val,0,255);
+    public enum GrayTransforms {
+        GRAY_TRANSFORMS_GREEN, GRAY_TRANSFORMS_SQRT,
+        GRAY_TRANSFORMS_AVG, GRAY_TRANSFORMS_USUAL, GRAY_TRANSFORMS_PAL
     }
 
-    public static BufferedImage colorToGray(BufferedImage inImg, GrayTransforms version){
+    public static int constrain(int val, int min, int max) {
+        return val > max ? max : (val < min ? min : val);
+    }
+
+    public static int constrain(int val) {
+        return constrain(val, 0, 255);
+    }
+
+    public static BufferedImage colorToGray(BufferedImage inImg, GrayTransforms version) {
         BufferedImage outImg = new
-                BufferedImage(inImg.getWidth(),inImg.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
-        if(inImg.getType() == BufferedImage.TYPE_BYTE_GRAY){
+                BufferedImage(inImg.getWidth(), inImg.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        if (inImg.getType() == BufferedImage.TYPE_BYTE_GRAY) {
             inImg.copyData(outImg.getRaster());
             return outImg;
         }
         for (int y = 0; y < inImg.getHeight(); y++)
             for (int x = 0; x < inImg.getWidth(); x++) {
-                int r = inImg.getRaster().getSample(x,y,0);
-                int g = inImg.getRaster().getSample(x,y,1);
-                int b = inImg.getRaster().getSample(x,y,2);
+                int r = inImg.getRaster().getSample(x, y, 0);
+                int g = inImg.getRaster().getSample(x, y, 1);
+                int b = inImg.getRaster().getSample(x, y, 2);
                 int grayLevel = 0;
-                switch (version){
+                switch (version) {
                     case GRAY_TRANSFORMS_GREEN -> grayLevel = g;
                     case GRAY_TRANSFORMS_SQRT -> grayLevel =
-                            constrain((int)Math.round(Math.sqrt(r*r + g*g + b*b)));
+                            constrain((int) Math.round(Math.sqrt(r * r + g * g + b * b)));
                     case GRAY_TRANSFORMS_AVG -> grayLevel =
-                            constrain((int)Math.round((double)(r+g+b)/3));
+                            constrain((int) Math.round((double) (r + g + b) / 3));
                     case GRAY_TRANSFORMS_USUAL -> grayLevel =
-                            constrain((int)Math.round((double)(3*r+2*g+4*b)/9));
+                            constrain((int) Math.round((double) (3 * r + 2 * g + 4 * b) / 9));
                     case GRAY_TRANSFORMS_PAL -> grayLevel =
-                            constrain((int)Math.round(0.299*r+0.587*g+0.114*b));
+                            constrain((int) Math.round(0.299 * r + 0.587 * g + 0.114 * b));
                 }
-                outImg.getRaster().setSample(x,y,0,grayLevel);
+                outImg.getRaster().setSample(x, y, 0, grayLevel);
             }
         return outImg;
     }
 
-    public static BufferedImage brightnessV1(BufferedImage inImg, int offset){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+    public static BufferedImage brightnessV1(BufferedImage inImg, int offset) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         for (int band = 0; band < inImg.getRaster().getNumBands(); band++)
             for (int y = 0; y < inImg.getHeight(); y++)
                 for (int x = 0; x < inImg.getWidth(); x++) {
-                    int inGrayLevel = inImg.getRaster().getSample(x,y,band);
+                    int inGrayLevel = inImg.getRaster().getSample(x, y, band);
                     int outGrayLevel = constrain(inGrayLevel + offset);
-                    outImg.getRaster().setSample(x,y,band,outGrayLevel);
+                    outImg.getRaster().setSample(x, y, band, outGrayLevel);
                 }
 
         return outImg;
     }
 
-    public static BufferedImage brightnessV2(BufferedImage inImg, int offset){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+    public static BufferedImage brightnessV2(BufferedImage inImg, int offset) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         short[] brightnessLUT = new short[256];
 
         for (int i = 0; i < 256; i++)
-            brightnessLUT[i] = (short)constrain(i + offset);
+            brightnessLUT[i] = (short) constrain(i + offset);
 
         for (int band = 0; band < inImg.getRaster().getNumBands(); band++)
             for (int y = 0; y < inImg.getHeight(); y++)
                 for (int x = 0; x < inImg.getWidth(); x++) {
-                    int inGrayLevel = inImg.getRaster().getSample(x,y,band);
-                    outImg.getRaster().setSample(x,y,band,brightnessLUT[inGrayLevel]);
+                    int inGrayLevel = inImg.getRaster().getSample(x, y, band);
+                    outImg.getRaster().setSample(x, y, band, brightnessLUT[inGrayLevel]);
                 }
 
         return outImg;
     }
 
-    public static BufferedImage brightnessV3(BufferedImage inImg, int offset){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+    public static BufferedImage brightnessV3(BufferedImage inImg, int offset) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         short[] brightnessLUT = new short[256];
 
@@ -302,13 +304,13 @@ public class ImageUtil {
 
         ShortLookupTable shortLookupTable = new ShortLookupTable(0, brightnessLUT);
         LookupOp lookupOp = new LookupOp(shortLookupTable, null);
-        lookupOp.filter(inImg,outImg);
+        lookupOp.filter(inImg, outImg);
 
         return outImg;
     }
 
-    public static BufferedImage brightnessRGB(BufferedImage inImg, int offsetR, int offsetG, int offsetB){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+    public static BufferedImage brightnessRGB(BufferedImage inImg, int offsetR, int offsetG, int offsetB) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         short[] rLUT = new short[256];
         short[] gLUT = new short[256];
@@ -322,15 +324,15 @@ public class ImageUtil {
             bLUT[i] = (short) constrain(i + offsetB);
         }
 
-        ShortLookupTable shortLookupTable = new ShortLookupTable(0,rgbLUT);
+        ShortLookupTable shortLookupTable = new ShortLookupTable(0, rgbLUT);
         LookupOp lookupOp = new LookupOp(shortLookupTable, null);
-        lookupOp.filter(inImg,outImg);
+        lookupOp.filter(inImg, outImg);
 
         return outImg;
     }
 
-    public static BufferedImage contrast(BufferedImage inImg, float scale){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+    public static BufferedImage contrast(BufferedImage inImg, float scale) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         short[] contrastLUT = new short[256];
 
@@ -341,79 +343,121 @@ public class ImageUtil {
 
         ShortLookupTable shortLookupTable = new ShortLookupTable(0, contrastLUT);
         LookupOp lookupOp = new LookupOp(shortLookupTable, null);
-        lookupOp.filter(inImg,outImg);
+        lookupOp.filter(inImg, outImg);
 
         return outImg;
     }
 
-    public static BufferedImage contrastGamma(BufferedImage inImg, double gamma){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+    public static BufferedImage contrastGamma(BufferedImage inImg, double gamma) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         short[] contrastLUT = new short[256];
 
         for (int i = 0; i < 256; i++) {
             double a = i / 255.0;  // scale to [0.0 ... 1.0]
-            double b = Math.pow(a, 1.0/gamma);
+            double b = Math.pow(a, 1.0 / gamma);
             double c = b * 255.0; // scale to [0 ... 255]
 
-            contrastLUT[i] = (short) constrain((int)Math.round(c));
+            contrastLUT[i] = (short) constrain((int) Math.round(c));
             System.out.println(i + " " + contrastLUT[i]);
         }
 
         ShortLookupTable shortLookupTable = new ShortLookupTable(0, contrastLUT);
         LookupOp lookupOp = new LookupOp(shortLookupTable, null);
-        lookupOp.filter(inImg,outImg);
+        lookupOp.filter(inImg, outImg);
 
         return outImg;
     }
 
-    public static BufferedImage threshold(BufferedImage inImg, int threshold){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+    public static BufferedImage threshold(BufferedImage inImg, int threshold) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
 
         short[] thresholdLUT = new short[256];
 
         for (int i = 0; i < 256; i++) {
-            thresholdLUT[i] = (short) ((i < threshold) ? 0 : 255) ;
+            thresholdLUT[i] = (short) ((i < threshold) ? 0 : 255);
             System.out.println(i + " " + thresholdLUT[i]);
         }
 
         ShortLookupTable shortLookupTable = new ShortLookupTable(0, thresholdLUT);
         LookupOp lookupOp = new LookupOp(shortLookupTable, null);
-        lookupOp.filter(inImg,outImg);
+        lookupOp.filter(inImg, outImg);
 
         return outImg;
     }
 
-    public static BufferedImage negative(BufferedImage inImg){
-        BufferedImage outImg = new BufferedImage(inImg.getWidth(),inImg.getHeight(), inImg.getType());
+    public static BufferedImage negative(BufferedImage inImg) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
         short[] negative = new short[256];
 
         for (int i = 0; i < 256; i++) {
-            negative[i] = (short) (255-i) ;
+            negative[i] = (short) (255 - i);
             System.out.println(i + " " + negative[i]);
         }
 
         ShortLookupTable shortLookupTable = new ShortLookupTable(0, negative);
         LookupOp lookupOp = new LookupOp(shortLookupTable, null);
-        lookupOp.filter(inImg,outImg);
+        lookupOp.filter(inImg, outImg);
 
         return outImg;
     }
 
-    public static BufferedImage applyMask(BufferedImage inImage, BufferedImage maskImg){
-        BufferedImage outImg = new BufferedImage(inImage.getWidth(),inImage.getHeight(),inImage.getType());
+    public static BufferedImage applyMask(BufferedImage inImage, BufferedImage maskImg) {
+        BufferedImage outImg = new BufferedImage(inImage.getWidth(), inImage.getHeight(), inImage.getType());
 
         for (int y = 0; y < inImage.getHeight(); y++)
             for (int x = 0; x < inImage.getWidth(); x++) {
-                if(maskImg.getRaster().getSample(x,y,0) > 0){
-                    int pixel = inImage.getRGB(x,y);
-                    outImg.setRGB(x,y, pixel);
+                if (maskImg.getRaster().getSample(x, y, 0) > 0) {
+                    int pixel = inImage.getRGB(x, y);
+                    outImg.setRGB(x, y, pixel);
                 }
             }
 
         return outImg;
     }
 
+    public static BufferedImage convolutionSimple(BufferedImage inImg, Kernel kernel) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
+
+        // kernle poperties
+        // kernel patratic
+        int kWidth = kernel.getWidth();
+        int kRadius = kWidth / 2;
+        float[] kData = kernel.getKernelData(null);
+        int kDataIndex = 0;
+
+        for (int band = 0; band < inImg.getRaster().getNumBands() && band < 3; band++)
+            for (int y = 0; y < inImg.getHeight(); y++)
+                for (int x = 0; x < inImg.getWidth(); x++) {
+
+                    float gray = 0;
+                    kDataIndex = 0;
+                    // parcurgem vecinantatea
+                    for (int ky = -kRadius; ky <= kRadius ; ky++)
+                        for (int kx = -kRadius; kx <= kRadius ; kx++){
+                            if((x+kx) < 0 || (x+kx) > inImg.getWidth()-1 || (y+ky) < 0 || (y+ky) > inImg.getHeight()-1){
+                                gray+=0;
+                            }
+                            else {
+                                gray+= kData[kDataIndex] * inImg.getRaster().getSample(x+kx,y+ky,band);
+                            }
+                            kDataIndex++;
+                        }
+                    outImg.getRaster().setSample(x,y,band,constrain(Math.round(gray)));
+
+                }
+
+        return outImg;
+    }
+
+    public static BufferedImage convolution(BufferedImage inImg, Kernel kernel) {
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
+
+        ConvolveOp convolveOp = new ConvolveOp(kernel,ConvolveOp.EDGE_NO_OP,null);
+        convolveOp.filter(inImg,outImg);
+
+        return outImg;
+    }
 
 }
