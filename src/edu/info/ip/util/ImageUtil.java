@@ -400,4 +400,20 @@ public class ImageUtil {
 
         return outImg;
     }
+
+    public static BufferedImage applyMask(BufferedImage inImage, BufferedImage maskImg){
+        BufferedImage outImg = new BufferedImage(inImage.getWidth(),inImage.getHeight(),inImage.getType());
+
+        for (int y = 0; y < inImage.getHeight(); y++)
+            for (int x = 0; x < inImage.getWidth(); x++) {
+                if(maskImg.getRaster().getSample(x,y,0) > 0){
+                    int pixel = inImage.getRGB(x,y);
+                    outImg.setRGB(x,y, pixel);
+                }
+            }
+
+        return outImg;
+    }
+
+
 }

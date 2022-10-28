@@ -106,7 +106,10 @@ public class MainTest {
         BufferedImage testImgThreshold = applySettingsDlg(testImgGray, new ThresholdDlg());
         displayImage(testImgThreshold, "Binary");
 
-        displayImage(negative(testImgThreshold), "Binary Negative");
+        BufferedImage testImgNegative = (negative(testImgThreshold));
+        displayImage(testImgNegative, "Binary Negative");
+
+        displayImage(applyMask(inputImg,testImgNegative));
 
     }
 }
