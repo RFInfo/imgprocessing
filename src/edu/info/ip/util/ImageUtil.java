@@ -2,9 +2,11 @@ package edu.info.ip.util;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 public class ImageUtil {
@@ -420,7 +422,7 @@ public class ImageUtil {
     public static BufferedImage convolutionSimple(BufferedImage inImg, Kernel kernel) {
         BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
-        // kernle poperties
+        // kernle properties
         // kernel patratic
         int kWidth = kernel.getWidth();
         int kRadius = kWidth / 2;
@@ -457,6 +459,61 @@ public class ImageUtil {
         ConvolveOp convolveOp = new ConvolveOp(kernel,ConvolveOp.EDGE_NO_OP,null);
         convolveOp.filter(inImg,outImg);
 
+        return outImg;
+    }
+
+    public static double[] histogramSimple(BufferedImage inImg, int band){
+        double[] histogram = new double[256];
+
+        for (int y = 0; y < inImg.getHeight(); y++)
+            for (int x = 0; x < inImg.getWidth(); x++) {
+                int gray = inImg.getRaster().getSample(x,y, band);
+                histogram[gray]++;
+            }
+
+        System.out.println(Arrays.toString(histogram));
+
+        // normalize
+        int totalNrOfPixels  = inImg.getWidth() * inImg.getWidth();
+
+        for (int i = 0; i <histogram.length; i++) {
+            histogram[i] = histogram[i] / totalNrOfPixels;
+        }
+
+        System.out.println(Arrays.toString(histogram));
+
+        return histogram;
+    }
+
+    public static BufferedImage histogramImage(BufferedImage inImg, int band, int hWidth, int hHeight){
+        BufferedImage outImg = new BufferedImage(hWidth, hHeight, BufferedImage.TYPE_INT_RGB);
+
+        double[] histogram = histogramSimple(inImg, band);
+        double max = 0;
+        int stickWidth = hWidth/histogram.length;
+
+        Graphics2D g2 = outImg.createGraphics();
+
+        for (int i = 0; i < histogram.length; i++) {
+            if(histogram[i] > max)
+                max = histogram[i];
+        }
+
+        switch (band){
+            case 0 -> g2.setColor(Color.RED);
+            case 1 -> g2.setColor(Color.GREEN);
+            case 2 -> g2.setColor(Color.BLUE);
+        }
+
+        if(inImg.getRaster().getNumBands() == 1)
+            g2.setColor(Color.LIGHT_GRAY);
+
+        for (int i = 0; i < histogram.length; i++) {
+            g2.fillRect(i*stickWidth, hHeight - (int)((histogram[i]*hHeight)/max), stickWidth, hHeight);
+//            g2.drawLine(i, hHeight, i, hHeight - (int)((histogram[i]*hHeight)/max));
+        }
+
+        g2.dispose();
         return outImg;
     }
 
