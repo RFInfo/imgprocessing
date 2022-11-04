@@ -20,5 +20,10 @@ public class TestHistogram {
         displayImage(grayImage, "Luminosity Image");
 
         displayImage(histogramImage(grayImage,0,256, 150), "LUMINOSITY");
+
+        BufferedImage contrastStretchImg = contrastStretch(grayImage);
+        displayImage(grayImage, "Contrast Stretch Image");
+
+        displayImage(histogramImage(contrastStretchImg,0,256, 150), "LUMINOSITY");
     }
 }
