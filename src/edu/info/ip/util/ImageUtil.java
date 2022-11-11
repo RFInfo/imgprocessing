@@ -637,4 +637,18 @@ public class ImageUtil {
 
         return dst;
     }
+
+    static public BufferedImage getBitPlane(BufferedImage inImg, int bitLevel){
+        BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+
+        for (int y = 0; y < inImg.getHeight(); y++)
+            for (int x = 0; x < inImg.getWidth(); x++) {
+                int pixel = inImg.getRaster().getSample(x,y,0);
+                pixel = (pixel >>> bitLevel) & 1;
+                outImg.getRaster().setSample(x,y,0,pixel);
+
+            }
+
+        return outImg;
+    }
 }
