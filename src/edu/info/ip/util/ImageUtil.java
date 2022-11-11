@@ -3,6 +3,7 @@ package edu.info.ip.util;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
@@ -422,8 +423,8 @@ public class ImageUtil {
     public static BufferedImage convolutionSimple(BufferedImage inImg, Kernel kernel) {
         BufferedImage outImg = new BufferedImage(inImg.getWidth(), inImg.getHeight(), inImg.getType());
 
-        // kernle properties
-        // kernel patratic
+        // kernel properties
+        // kernel size 2n+1 x 2n+1
         int kWidth = kernel.getWidth();
         int kRadius = kWidth / 2;
         float[] kData = kernel.getKernelData(null);
@@ -435,11 +436,12 @@ public class ImageUtil {
 
                     float gray = 0;
                     kDataIndex = 0;
-                    // parcurgem vecinantatea
+                    // summing neighborhood
                     for (int ky = -kRadius; ky <= kRadius ; ky++)
                         for (int kx = -kRadius; kx <= kRadius ; kx++){
                             if((x+kx) < 0 || (x+kx) > inImg.getWidth()-1 || (y+ky) < 0 || (y+ky) > inImg.getHeight()-1){
                                 gray+=0;
+//                                gray += kData[kDataIndex] * inImg.getRaster().getSample(x, y, band);
                             }
                             else {
                                 gray+= kData[kDataIndex] * inImg.getRaster().getSample(x+kx,y+ky,band);
@@ -582,4 +584,57 @@ public class ImageUtil {
         return outImg;
     }
 
+    public static BufferedImage scale(BufferedImage src, double scaleX, double scaleY, int interpolation){
+        BufferedImage dst = null;
+
+        AffineTransform af = new AffineTransform();
+        af.scale(scaleX,scaleY);
+
+        int w = (int) (src.getWidth() * scaleX);
+        int h = (int) (src.getHeight() * scaleY);
+
+        dst = new BufferedImage(w,h,src.getType());
+
+        AffineTransformOp op = new AffineTransformOp(af, interpolation);
+        op.filter(src,dst);
+
+        return dst;
+    }
+
+    public static BufferedImage resize(BufferedImage src, int width, int height, int interpolation){
+        BufferedImage dst = null;
+
+        double scaleX = (double) width / src.getWidth();
+        double scaleY = (double) height / src.getHeight();
+
+        if(width > 0 && height > 0)
+            dst = scale(src,scaleX,scaleY,interpolation);
+        else if (width > 0 && height == 0)
+            dst = scale(src,scaleX,scaleX,interpolation);
+        else if(height > 0 && width == 0)
+            dst = scale(src,scaleY,scaleY,interpolation);
+        else
+            dst = src;
+
+        return dst;
+    }
+
+    public static BufferedImage rotate(BufferedImage src, double angle, int interpolation){
+        BufferedImage dst = null;
+        dst = new BufferedImage(src.getWidth(),src.getHeight(),src.getType());
+
+        double radian = angle * Math.PI/180;
+
+        AffineTransform af = new AffineTransform();
+
+        af.translate(src.getWidth()/2, src.getHeight()/2);
+        af.scale(0.5,0.5);
+        af.rotate(radian);
+        af.translate(-src.getWidth()/2, -src.getHeight()/2);
+
+        AffineTransformOp op = new AffineTransformOp(af, interpolation);
+        op.filter(src,dst);
+
+        return dst;
+    }
 }
